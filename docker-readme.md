@@ -72,18 +72,25 @@ and in a different terminal
 
 ```
 docker run \
-         -d -p 3000:3000 \
-         -p 9004:9004 \
-         -p 9003:9003 \
-         -p 9002:9002 \
-         -p 9001:9001 \
+         -d -p 3000-3004:3000-3004 \
+         -p 8080:8080 \
+         -p 9000:9000 \ 
          --name msl-node-server \
          --net=host -ti \
          --entrypoint=/bin/bash \
          kenzandocker/msl-server
 ```
 
-3. Start Up Edge Services
+3. Start up tomcat and eureka servers
+
+`docker exec -d msl-node-server sudo service tomcat7 restart`
+
+3.1. Start up zuul gateway
+
+`docker exec -d msl-node-server \
+         bash -c "cd ../server/msl-zuul && mvn jetty:run >> zuul_log"`
+
+4. Start Up Edge Services
 
 `docker exec -it msl-node-server npm run serve-all`
 
@@ -93,7 +100,7 @@ docker run \
 docker exec \
       -it \
       msl-node-server \
-      bash -c "npm rebuild node-sass && npm run deploy-dev"
+      bash -c "npm rebuild node-sass && npm run deploy-dev-zuul"
 ```
 
 >**NOTE**: -it - interactive | -d - dameon

@@ -2,6 +2,10 @@
 	path = server/msl-server-common
 	url = git@github.com:kenzanmedia/msl-server-common.git
 
+[submodule "server/msl-zuul"]
+	path = server/msl-zuul
+	url = git@github.com:kenzanlabs/msl-zuul.git
+
 [submodule "server/msl-catalog-edge"]
 	path = server/msl-catalog-edge
 	url = git@github.com:kenzanmedia/msl-catalog-edge.git

@@ -189,32 +189,38 @@ function runContainer {
        docker stop ${SERVER_CONTAINER_NAME} && docker rm ${SERVER_CONTAINER_NAME}
       fi
       docker run \
-            -dt -p 3000-3004:3000-3004 -p 9001-9004:9001-9004 \
+            -dt -p 3000-3004:3000-3004 -p 8080:8080 -p 9000:9000 \
             --name ${SERVER_CONTAINER_NAME} \
             --net=host \
             --entrypoint=/bin/bash \
             ${SERVER_IMAGE_TAG}                       #image to run
 
       # Start MSL
+      docker exec -d ${SERVER_CONTAINER_NAME} sudo service tomcat7 restart
+      echo -e "\n" && progressAnimation 480 "Starting tomcat and eureka servers, ETA: 6min"
+
+      docker exec -d ${SERVER_CONTAINER_NAME} \
+        bash -c "cd ../server/msl-zuul && mvn jetty:run >> zuul_log"
+      echo -e "\n" && progressAnimation 120 "Booting up zuul"
+
       docker exec -d ${SERVER_CONTAINER_NAME} \
         bash -c "npm run catalog-edge-server >> catalog_edge_log"
-      echo -e "\n" && progressAnimation 5 "Starting up catalog edge"
+      echo -e "\n" && progressAnimation 15 "Starting up catalog edge"
 
       docker exec -d ${SERVER_CONTAINER_NAME} \
         bash -c "npm run account-edge-server >> account_edge_log"
-      echo -e "\n" && progressAnimation 5 "Starting up account edge"
+      echo -e "\n" && progressAnimation 15 "Starting up account edge"
 
       docker exec -d ${SERVER_CONTAINER_NAME} \
         bash -c "npm run login-edge-server >> login_edge_log"
-      echo -e "\n" && progressAnimation 5 "Starting up login edge"
+      echo -e "\n" && progressAnimation 15 "Starting up login edge"
 
       docker exec -d ${SERVER_CONTAINER_NAME} \
         bash -c "npm run ratings-edge-server >> ratings_edge_log"
-      echo -e "\n" && progressAnimation 5 "Starting up ratings edge"
+      echo -e "\n" && progressAnimation 15 "Starting up ratings edge"
 
       docker exec -d ${SERVER_CONTAINER_NAME} \
-        bash -c "npm rebuild node-sass && npm run deploy-dev"
-
+        bash -c "npm rebuild node-sass && npm run deploy-dev-zuul"
       echo -e "\n" && progressAnimation 120 "Starting MSL"
 
       echo -e "\n\nAll set, go to ${GREEN}http://${docker_machine_ip}:3000${NC}\n"

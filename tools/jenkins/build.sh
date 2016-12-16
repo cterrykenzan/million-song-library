@@ -2,6 +2,16 @@
 echo $BUILD_NUMBER > $WORKSPACE/build_number
 cd $WORKSPACE;
 
+echo "****"
+echo "****"
+echo "****"
+echo "looking for localhost"
+grep -R 127.0.0.1 *
+grep -R localhost *
+echo "****"
+echo "****"
+echo "****"
+
 sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-catalog-data-client/src/main/resources/config.properties
 sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-account-data-client/src/main/resources/config.properties
 
@@ -43,4 +53,3 @@ mvn package -P rpm-package
 
 mkdir $WORKSPACE/RPM/
 cp $WORKSPACE/server/$SERVICE_NAME/target/rpm/$SERVICE_NAME/RPMS/x86_64/$SERVICE_NAME*.rpm $WORKSPACE/RPM/
-

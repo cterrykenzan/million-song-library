@@ -14,6 +14,7 @@ echo "****"
 
 sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-catalog-data-client/src/main/resources/config.properties
 sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-account-data-client/src/main/resources/config.properties
+for file in `grep -Rl "local=\"127.0.0.1\"" *`; do sed -i -e "s/local=\"127.0.0.1\"/local=\"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
 
 #Service .poms expect to package RPMs with individualized installer names
 # Should generalize when time allows.

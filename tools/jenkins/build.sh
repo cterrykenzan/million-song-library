@@ -2,18 +2,8 @@
 echo $BUILD_NUMBER > $WORKSPACE/build_number
 cd $WORKSPACE;
 
-echo "****"
-echo "****"
-echo "****"
-echo "looking for localhost"
-grep -R 127.0.0.1 *
-grep -R localhost *
-echo "****"
-echo "****"
-echo "****"
-
-sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-catalog-data-client/src/main/resources/config.properties
-sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-account-data-client/src/main/resources/config.properties
+#sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-catalog-data-client/src/main/resources/config.properties
+#sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-account-data-client/src/main/resources/config.properties
 for file in `grep -Rl "local=\"127.0.0.1\"" *`; do sed -i -e "s/local=\"127.0.0.1\"/local=\"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
 for file in `grep -Rl "domain=\"127.0.0.1\"" *`; do sed -i -e "s/local=\"127.0.0.1\"/domain=\"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
 
@@ -42,7 +32,7 @@ npm install -y protractor
 npm install -y selenium-webdriver
 
 cd $WORKSPACE
-for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
+#for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
 echo "Double checking"
 grep -R DEFAULT_CLUSTER *
 

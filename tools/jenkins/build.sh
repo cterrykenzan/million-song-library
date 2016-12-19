@@ -10,6 +10,8 @@ for file in `grep -Rl "domain=\"127.0.0.1\"" *`; do sed -i -e "s/local=\"127.0.0
 
 #Service .poms expect to package RPMs with individualized installer names
 # Should generalize when time allows.
+#RPM plugin currently grabs script from the service working dir
+# Can get the two-for-one deal by referencing the install script directly once it's refactored
 echo "Configuring Installation Script"
 INSTALLER_FILENAME=`echo $SERVICE_NAME | sed -e s/msl/install/`
 cp tools/rpm/postinstall.sh server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
@@ -20,9 +22,7 @@ echo "Setting default cluster to the msl monolith elb"
 for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
 #grep -R DEFAULT_CLUSTER *
 
-#Installing --all-- of the msl requirements, even frontend.
-# Makes builds come out consistently.
-# Can cut down build duration when time allows for refining this.
+#Installing all msl requirements so this script can remain generalized.
 cd $WORKSPACE/msl-pages;
 npm install -y
 bower install

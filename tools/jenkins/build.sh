@@ -18,7 +18,7 @@ cat server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
 
 echo "Setting default cluster to the msl monolith elb"
 for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
-grep -R DEFAULT_CLUSTER *
+#grep -R DEFAULT_CLUSTER *
 
 #Installing --all-- of the msl requirements, even frontend.
 # Makes builds come out consistently.
@@ -33,8 +33,8 @@ npm install -y selenium-webdriver
 
 cd $WORKSPACE
 #for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
-echo "Double checking"
-grep -R DEFAULT_CLUSTER *
+#echo "Double checking"
+#grep -R DEFAULT_CLUSTER *
 
 #The extra build steps seem superfluous but work consistently.
 #Same as above - refine when time allows.

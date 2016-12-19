@@ -3,6 +3,7 @@
 #Using INSTALLING_SERVICE rather than SERVICE_NAME because
 # when this script runs, Jenkins is out of the picture and can't pass in vars
 INSTALLING_SERVICE=EDITME
+echo "$INSTALLING_SERVICE"
 
 if [ $INSTALLING_SERVICE == EDITME ]; then
   echo "Script was supposed to be edited by jenkins job first."

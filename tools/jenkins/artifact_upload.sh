@@ -14,4 +14,4 @@ echo "Build number is $BUILD_NUMBER"
 curl \
   --upload-file $WORKSPACE/server/$SERVICE_NAME/target/rpm/$SERVICE_NAME/RPMS/x86_64/$SERVICE_NAME*.x86_64.rpm \
   -u $AUTH_UPLOAD \
-  -v http://nexus2.kenzan-devops.com/nexus/content/repositories/releases/msl/server/$SERVICE_NAME/$SERVICE_NAME-$RELEASE_TYPE-$BUILD_NUMBER.x86_64.rpm
+  -v http://nexus2.kenzan-devops.com/nexus/content/repositories/releases/msl/server/$SERVICE_NAME/$SERVICE_NAME-$BUILD_NUMBER.x86_64.rpm

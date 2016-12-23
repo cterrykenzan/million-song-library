@@ -35,6 +35,8 @@ cd $WORKSPACE
 for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e 's/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g' -e 's/us-west-2/$AWS_REGION/g' $file; done
 echo "Double checking"
 grep -R DEFAULT_CLUSTER *
+find . -type f | grep config$ | xargs cat | grep domain
+find . -type f | grep config$ | xargs cat | grep local
 
 #The extra build steps seem superfluous but work consistently.
 #Same as above - refine when time allows.
@@ -43,6 +45,12 @@ npm run build-server
 cd $WORKSPACE/server/$SERVICE_NAME;
 mvn compile
 mvn package -P rpm-package
+
+echo "Triple checking"
+echo "Double checking"
+grep -R DEFAULT_CLUSTER *
+find . -type f | grep config$ | xargs cat | grep domain
+find . -type f | grep config$ | xargs cat | grep local
 
 mkdir $WORKSPACE/RPM/
 BUILD_NUMBER=`cat $WORKSPACE/build_number`

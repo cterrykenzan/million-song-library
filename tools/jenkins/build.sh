@@ -32,9 +32,9 @@ npm install -y protractor
 npm install -y selenium-webdriver
 
 cd $WORKSPACE
-for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
-#echo "Double checking"
-#grep -R DEFAULT_CLUSTER *
+for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e 's/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g' -e 's/us-west-2/$AWS_REGION/g' $file; done
+echo "Double checking"
+grep -R DEFAULT_CLUSTER *
 
 #The extra build steps seem superfluous but work consistently.
 #Same as above - refine when time allows.

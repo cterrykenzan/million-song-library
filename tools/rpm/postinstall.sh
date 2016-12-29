@@ -19,9 +19,9 @@ chmod a+rwx /var/log/msl
 JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
 
 cd /tmp
-jar -xf msl-account-edge-1.4.0-jar-with-dependencies.jar config.properties
+unzip msl-account-edge-1.4.0-jar-with-dependencies.jar config.properties
 sed -i -e 's/127.0.0.1/$INSTALLING_CASSANDRA/' config.properties
-jar -uf msl-account-edge-1.4.0-jar-with-dependencies.jar config.properties
+zip -f msl-account-edge-1.4.0-jar-with-dependencies.jar config.properties
 
 if [ `echo $JAR_TO_EXEC | wc -l` == 1 ]; then
   echo "Adding startup line to rc.local" | tee -a /tmp/msl-install.log

@@ -12,7 +12,10 @@ done
 for file in `grep -Rl "domain=127.0.0.1" *`; do
   sed -i -e s/domain=127.0.0.1/domain=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file;
 done
-
+echo "Setting default cluster to the msl monolith elb"
+for file in `grep -Rl "127.0.0.1" *`; do
+  sed -i -e "s/127.0.0.1/$CASSANDRA_HOST/g" -e 's/us-west-2/$AWS_REGION/g' $file;
+done
 
 #Service .poms expect to package RPMs with individualized installer names
 # Should generalize when time allows.
@@ -25,10 +28,9 @@ sed -i -e s/=EDITME/=$SERVICE_NAME/ $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_F
 cat $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
 
 echo "Setting default cluster to the msl monolith elb"
-for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do
+for file in `grep -Rl "127.0.0.1" *`; do
   sed -i -e "s/127.0.0.1/$CASSANDRA_HOST/g" -e 's/us-west-2/$AWS_REGION/g' $file;
 done
-#grep -R DEFAULT_CLUSTER *
 
 #Installing all msl requirements so this script can remain generalized.
 cd $WORKSPACE/msl-pages;
@@ -43,8 +45,21 @@ npm install -y selenium-webdriver
 #Same as above - refine when time allows.
 cd $WORKSPACE/msl-pages
 npm run build-server
+
+cd $WORKSPACE
+for file in `grep -Rl "local=127.0.0.1" *`; do
+  sed -i -e s/local=127.0.0.1/domain=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file;
+done
+for file in `grep -Rl "domain=127.0.0.1" *`; do
+  sed -i -e s/domain=127.0.0.1/domain=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file;
+done
+echo "Setting default cluster to the msl monolith elb"
+for file in `grep -Rl "127.0.0.1" *`; do
+  sed -i -e "s/127.0.0.1/$CASSANDRA_HOST/g" -e 's/us-west-2/$AWS_REGION/g' $file;
+done
+
 cd $WORKSPACE/server/$SERVICE_NAME;
-mvn compile
+#mvn compile
 mvn package -P rpm-package
 
 

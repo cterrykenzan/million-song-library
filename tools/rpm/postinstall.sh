@@ -19,11 +19,17 @@ chmod a+rwx /var/log/msl
 JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
 
 cd /tmp
-unzip $JAR_TO_EXEC config.properties
-sed -i -e 's/127.0.0.1/$INSTALLING_CASSANDRA/' config.properties
-zip -f $JAR_TO_EXEC config.properties
+if unzip $JAR_TO_EXEC config.properties; then
+  sed -i -e 's/127.0.0.1/$INSTALLING_CASSANDRA/' config.properties
+  zip -f $JAR_TO_EXEC config.properties
+else
+  echo "Editing config failed during jar unpack, reason:"
+  unzip $JAR_TO_EXEC config.properties
+  exit 1
+fi
 
 if [ `echo $JAR_TO_EXEC | wc -l` == 1 ]; then
+  echo "Found $JAR_TO_EXEC"
   echo "Adding startup line to rc.local" | tee -a /tmp/msl-install.log
   echo "/usr/bin/java8 -jar $JAR_TO_EXEC 2>&1 | tee -a /var/log/msl/$INSTALLING_SERVICE.log" | tee -a /tmp/msl-install.log | tee /opt/kenzan/startup.sh
   chmod +x /opt/kenzan/startup.sh > /dev/null

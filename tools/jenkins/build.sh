@@ -2,7 +2,7 @@
 echo $BUILD_NUMBER > $WORKSPACE/build_number
 cd $WORKSPACE;
 
-$CASSANDRA_HOST="cassandra-msl.$BASE_DOMAIN"
+CASSANDRA_HOST="cassandra-msl.$BASE_DOMAIN"
 
 echo "Cassandra is at $CASSANDRA_HOST"
 
@@ -24,7 +24,7 @@ done
 echo "Configuring Installation Script"
 INSTALLER_FILENAME=`echo $SERVICE_NAME | sed -e s/msl/install/`
 cp $WORKSPACE/tools/rpm/postinstall.sh $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
-sed -i -e s/=EDITME/=$SERVICE_NAME/ $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
+sed -i -e s/=EDITME/=$SERVICE_NAME/ -e s/=EDITCASSANDRA/=$CASSANDRA_HOST/ $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
 cat $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
 
 echo "Setting default cluster to the msl monolith elb"

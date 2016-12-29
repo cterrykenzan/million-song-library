@@ -2,10 +2,16 @@
 echo $BUILD_NUMBER > $WORKSPACE/build_number
 cd $WORKSPACE;
 
-#sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-catalog-data-client/src/main/resources/config.properties
-#sed -i -e 's/domain=127.0.0.1/domain=$CASSANDRA_HOST/' $WORKSPACE/server/msl-account-data-client/src/main/resources/config.properties
-for file in `grep -Rl "local=127.0.0.1" *`; do sed -i -e s/local=127.0.0.1/local=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file; done
-for file in `grep -Rl "domain=127.0.0.1" *`; do sed -i -e s/domain=127.0.0.1/domain=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file; done
+$CASSANDRA_HOST="cassandra-msl.$BASE_DOMAIN"
+
+echo "Cassandra is at $CASSANDRA_HOST"
+
+for file in `grep -Rl "local=127.0.0.1" *`; do
+  sed -i -e s/local=127.0.0.1/domain=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file;
+done
+for file in `grep -Rl "domain=127.0.0.1" *`; do
+  sed -i -e s/domain=127.0.0.1/domain=$CASSANDRA_HOST/g -e 's/us-west-2/$AWS_REGION/g' $file;
+done
 
 
 #Service .poms expect to package RPMs with individualized installer names
@@ -19,7 +25,9 @@ sed -i -e s/=EDITME/=$SERVICE_NAME/ $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_F
 cat $WORKSPACE/server/$SERVICE_NAME/$INSTALLER_FILENAME.sh
 
 echo "Setting default cluster to the msl monolith elb"
-for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e "s/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g" -e 's/us-west-2/$AWS_REGION/g' $file; done
+for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do
+  sed -i -e "s/127.0.0.1/$CASSANDRA_HOST/g" -e 's/us-west-2/$AWS_REGION/g' $file;
+done
 #grep -R DEFAULT_CLUSTER *
 
 #Installing all msl requirements so this script can remain generalized.
@@ -31,13 +39,6 @@ npm install webpack
 npm install -y protractor
 npm install -y selenium-webdriver
 
-cd $WORKSPACE
-for file in `grep -Rl "DEFAULT_CLUSTER = \"127.0.0.1\"" *`; do sed -i -e 's/DEFAULT_CLUSTER\ =\ \"127.0.0.1\"/DEFAULT_CLUSTER\ =\ \"$CASSANDRA_HOST\"/g' -e 's/us-west-2/$AWS_REGION/g' $file; done
-echo "Double checking"
-grep -R DEFAULT_CLUSTER *
-find . -type f | grep config$ | xargs cat | grep domain
-find . -type f | grep config$ | xargs cat | grep local
-
 #The extra build steps seem superfluous but work consistently.
 #Same as above - refine when time allows.
 cd $WORKSPACE/msl-pages
@@ -46,7 +47,7 @@ cd $WORKSPACE/server/$SERVICE_NAME;
 mvn compile
 mvn package -P rpm-package
 
-echo "Triple checking"
+
 echo "Double checking"
 grep -R DEFAULT_CLUSTER *
 find . -type f | grep config$ | xargs cat | grep domain

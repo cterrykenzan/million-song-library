@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Environment variables I can use:"
+export
+
 #Using INSTALLING_SERVICE rather than SERVICE_NAME because
 # when this script runs, Jenkins is out of the picture and can't pass in vars
 INSTALLING_SERVICE=EDITME

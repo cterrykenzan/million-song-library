@@ -20,8 +20,11 @@ JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
 
 cd /tmp/
 if unzip $JAR_TO_EXEC config.properties; then
-  sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
-  cat /tmp/config.properties
+  #sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
+  #cat /tmp/config.properties
+  echo "domain=$INSTALLING_CASSANDRA" > config.properties
+  echo "keyspace=msl" >> config.properties
+  echo "region=us-east-1" >> config.properties
   zip -f $JAR_TO_EXEC config.properties
 else
   echo "Editing config failed during jar unpack, reason:"

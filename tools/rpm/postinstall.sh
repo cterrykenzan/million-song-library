@@ -17,11 +17,13 @@ fi
 
 chmod a+rwx /var/log/msl
 JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
+echo "Found a jar at $JAR_TO_EXEC"
 
 cd /tmp/
 if unzip $JAR_TO_EXEC config.properties; then
-  chmod a+rw config.properties
-  sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
+  #chmod a+rw config.properties
+  #sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
+  rm -rf config.properties
   echo "creating config"
   echo "domain=$INSTALLING_CASSANDRA" > config.properties
   echo "keyspace=msl" >> config.properties

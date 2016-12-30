@@ -25,6 +25,7 @@ if unzip $JAR_TO_EXEC config.properties; then
   echo "domain=$INSTALLING_CASSANDRA" > config.properties
   echo "keyspace=msl" >> config.properties
   echo "region=us-east-1" >> config.properties
+  cat config.properties
   echo "adding to zip"
   zip -f $JAR_TO_EXEC config.properties
 else

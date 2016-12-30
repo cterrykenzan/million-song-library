@@ -24,6 +24,7 @@ if unzip $JAR_TO_EXEC config.properties; then
   #chmod a+rw config.properties
   #sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
   rm -rf config.properties
+  echo "192.168.4.93 cassandra-msl.kenzan-devops.com" >> /etc/hosts
   echo "creating config"
   echo "domain=$INSTALLING_CASSANDRA" > config.properties
   echo "keyspace=msl" >> config.properties

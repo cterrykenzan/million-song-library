@@ -21,7 +21,7 @@ JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
 cd /tmp/
 if unzip $JAR_TO_EXEC config.properties; then
   chmod a+rw config.properties
-  #sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
+  sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
   echo "creating config"
   echo "domain=$INSTALLING_CASSANDRA" > config.properties
   echo "keyspace=msl" >> config.properties

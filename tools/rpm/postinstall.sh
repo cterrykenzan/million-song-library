@@ -18,11 +18,11 @@ fi
 chmod a+rwx /var/log/msl
 JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
 
-
-if unzip $JAR_TO_EXEC /tmp/config.properties; then
-  sed -i -e 's/127.0.0.1/$INSTALLING_CASSANDRA/' /tmp/config.properties
+cd /tmp/
+if unzip $JAR_TO_EXEC config.properties; then
+  sed -i -e 's/127.0.0.1/$INSTALLING_CASSANDRA/' config.properties
   cat /tmp/config.properties
-  zip -f $JAR_TO_EXEC /tmp/config.properties
+  zip -f $JAR_TO_EXEC config.properties
 else
   echo "Editing config failed during jar unpack, reason:"
   unzip $JAR_TO_EXEC config.properties

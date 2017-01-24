@@ -17,26 +17,28 @@ fi
 
 chmod a+rwx /var/log/msl
 JAR_TO_EXEC=`find /opt/kenzan/$INSTALLING_SERVICE-*-with-dependencies.jar`
-echo "Found a jar at $JAR_TO_EXEC"
+#echo "Found a jar at $JAR_TO_EXEC"
 
-cd /tmp/
-if unzip $JAR_TO_EXEC config.properties; then
-  #chmod a+rw config.properties
-  #sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
-  rm -rf config.properties
-  echo "192.168.4.93 cassandra-msl.kenzan-devops.com" >> /etc/hosts
-  echo "creating config"
-  echo "domain=$INSTALLING_CASSANDRA" > config.properties
-  echo "keyspace=msl" >> config.properties
-  echo "region=us-east-1" >> config.properties
-  cat config.properties
-  echo "adding to zip"
-  zip -f $JAR_TO_EXEC config.properties
-else
-  echo "Editing config failed during jar unpack, reason:"
-  unzip $JAR_TO_EXEC config.properties
-  exit 1
-fi
+#Commented out because environment config is now moved out of the build phase.
+#Should be safe to delete.
+#cd /tmp/
+#if unzip $JAR_TO_EXEC config.properties; then
+  # #chmod a+rw config.properties
+  # #sed -i -e s/127.0.0.1/$INSTALLING_CASSANDRA/ config.properties
+  # rm -rf config.properties
+  # echo "192.168.4.93 cassandra-msl.kenzan-devops.com" >> /etc/hosts
+  # echo "creating config"
+  # echo "domain=$INSTALLING_CASSANDRA" > config.properties
+  # echo "keyspace=msl" >> config.properties
+  # echo "region=us-east-1" >> config.properties
+  # cat config.properties
+  # echo "adding to zip"
+#  zip -f $JAR_TO_EXEC config.properties
+#else
+#  echo "Editing config failed during jar unpack, reason:"
+#  unzip $JAR_TO_EXEC config.properties#
+#  exit 1
+#fi
 
 if [ `echo $JAR_TO_EXEC | wc -l` == 1 ]; then
   echo "Found $JAR_TO_EXEC"
